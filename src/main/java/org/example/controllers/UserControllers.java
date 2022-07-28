@@ -3,6 +3,7 @@ package org.example.controllers;
 import org.example.DAO.UserDao;
 import org.example.DAO.UserDaoImpl;
 import org.example.models.User;
+import org.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,9 +14,9 @@ import java.util.List;
 
 @Controller
 public class UserControllers {
-    private final UserDao userService;
+    private final UserService userService;
 
-    public UserControllers(UserDao userService) {
+    public UserControllers(UserService userService) {
         this.userService = userService;
     }
 
