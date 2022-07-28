@@ -12,13 +12,17 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
+import javax.swing.*;
+
+/*класс реализующий  бины и интерфейс, которрый реализуем, когда хотим под себя
+* настроить веб приложение */
 @Configuration
+@ComponentScan("org.example")
 @EnableWebMvc
-@ComponentScan(basePackages = "org.example")
-public class WebConfig implements WebMvcConfigurer {
+public class webConfig implements WebMvcConfigurer {
     private final ApplicationContext applicationContext;
 @Autowired
-    public WebConfig(ApplicationContext applicationContext) {
+    public webConfig(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 
@@ -26,23 +30,25 @@ public class WebConfig implements WebMvcConfigurer {
     public SpringResourceTemplateResolver templateResolver() {
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
         templateResolver.setApplicationContext(applicationContext);
-        templateResolver.setPrefix("WEB-INF/views/");
+        templateResolver.setPrefix("/WEB-INF/views/");
         templateResolver.setSuffix(".html");
+        templateResolver.setCharacterEncoding("UTF-8");
         return templateResolver;
     }
 
     @Bean
     public SpringTemplateEngine templateEngine() {
-        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver());
-        templateEngine.setEnableSpringELCompiler(true);
-        return templateEngine;
+    SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+    templateEngine.setTemplateResolver(templateResolver());
+    templateEngine.setEnableSpringELCompiler(true);
+    return templateEngine;
     }
+
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
-        ThymeleafViewResolver resolver = new ThymeleafViewResolver(); // здесь задается таймлиф
+        ThymeleafViewResolver resolver = new ThymeleafViewResolver();
         resolver.setTemplateEngine(templateEngine());
+        resolver.setCharacterEncoding("UTF-8");
         registry.viewResolver(resolver);
     }
 }
-

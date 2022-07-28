@@ -1,55 +1,53 @@
 package org.example.DAO;
 
 import org.example.models.User;
-import org.hibernate.Hibernate;
-import org.springframework.orm.hibernate5.HibernateOperations;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+
 @Repository
+@Transactional
 public class UserDaoImpl implements UserDao{
     @PersistenceContext
-    private EntityManager em;
+    private final EntityManager entityManager;
+
+    public UserDaoImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
 
     @Override
-    public List<User> index() {
-       return em.createQuery("select p from User p", User.class).getResultList();
+    public List<User> getAll() {
 
+        return entityManager.createQuery("select u from User u ", User.class).getResultList();
     }
 
     @Override
-    public void save(User user) {
-        em.getTransaction().begin(); /// нужно ли каждый раз открывать и закрывать?
-        em.merge(user);
-        em.getTransaction().commit();
+    public void add(User user) {
+    entityManager.persist(user);
 
     }
 
     @Override
     public void delete(int id) {
-        em.getTransaction().begin();
-
-        User user = em.find(User.class, id);
-        em.remove(user);
-        em.getTransaction().commit();
+    entityManager.remove(entityManager.find(User.class,id));
 
     }
 
     @Override
-    public void update(int id, User user) {
+    public void update(int id, User UpdateUser) {
+    User userToBeUpdate = entityManager.find(User.class,id);
+    userToBeUpdate.setName(UpdateUser.getName());
+    userToBeUpdate.setAge(UpdateUser.getAge());
+    userToBeUpdate.setEmail(UpdateUser.getEmail());
 
     }
 
     @Override
-    public User show(int id) {
-        em.getTransaction().begin();
-
-        User user = em.find(User.class, id);
-        em.detach(user);
-        em.getTransaction().commit();
-        return user;
+    public User findById(int id) {
+        return entityManager.find(User.class, id);
     }
 }

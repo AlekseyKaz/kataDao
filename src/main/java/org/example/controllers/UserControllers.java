@@ -1,72 +1,34 @@
 package org.example.controllers;
 
-import org.example.DAO.UserDao;
-import org.example.models.User;
+import org.example.service.UserService;
+import org.example.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.validation.Valid;
+import javax.persistence.GeneratedValue;
+
 @Controller
 @RequestMapping("/user")
 public class UserControllers {
-
-        private final UserDao userDao;
+    private final UserService userService;
 @Autowired
-    public UserControllers(UserDao userDao) {
-        this.userDao = userDao;
+    public UserControllers(UserServiceImpl userService) {
+        this.userService = userService;
     }
 
-
-    @GetMapping()
-        public String index(Model model) {
-            model.addAttribute("user", userDao.index());
-            return "people/index";
-        }
-
-        @GetMapping("/{id}")
-        public String show(@PathVariable("id") int id, Model model) {
-            model.addAttribute("person", userDao.show(id));
-            return "people/show";
-        }
-
-        @GetMapping("/new")
-        public String newPerson(@ModelAttribute("user") User user) {
-            return "people/new";
-        }
-
-        @PostMapping()
-        public String create(@ModelAttribute("person") @Valid User user,
-                             BindingResult bindingResult) {
-            if (bindingResult.hasErrors())
-                return "people/new";
-
-            userDao.save(user);
-            return "redirect:/user";
-        }
-
-        @GetMapping("/{id}/edit")
-        public String edit(Model model, @PathVariable("id") int id) {
-            model.addAttribute("person", userDao.show(id));
-            return "people/edit";
-        }
-
-        @PatchMapping("/{id}")
-        public String update(@ModelAttribute("person") @Valid User user, BindingResult bindingResult,
-                             @PathVariable("id") int id) {
-            if (bindingResult.hasErrors())
-                return "people/edit";
-
-            userDao.update(id, user);
-            return "redirect:/user";
-        }
-
-        @DeleteMapping("/{id}")
-        public String delete(@PathVariable("id") int id) {
-            userDao.delete(id);
-            return "redirect:/user";
-        }
+    @GetMapping("/user") //получаем всех людей из ДАО и выводит на отображение
+    public String getAll(Model model) {
+    model.addAttribute("user", userService.getAll());
+    return "getAll";
+    }
+    @GetMapping("/{id}")
+    public String findById(@PathVariable("id") int id, Model model) {
+    model.addAttribute("user", userService.findById(id));
+    return "findById";// получем одного человека по айди из ДАО и передаем на отображение
+    }
 
 }
