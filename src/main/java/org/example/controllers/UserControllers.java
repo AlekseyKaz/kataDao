@@ -30,7 +30,7 @@ public class UserControllers {
             userService.add(new User("dfbd", 13,  "@4"));
         }
         model.addAttribute("user", users);
-    return "getAll";
+    return "/getAll";
     }
     @GetMapping("/{id}")
     public String findById(@PathVariable("id") int id, Model model) {
