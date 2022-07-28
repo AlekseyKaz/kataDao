@@ -22,11 +22,13 @@ import java.util.Properties;
 @PropertySource("classpath:db.properties")
 @EnableTransactionManagement
 public class appConfig {
-    private final Environment env;
+    private Environment env;
     @Autowired
     public appConfig(Environment env) {
         this.env = env;
     }
+
+    @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getRequiredProperty("db.driver"));

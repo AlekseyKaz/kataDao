@@ -1,6 +1,7 @@
 package org.example.DAO;
 
 import org.example.models.User;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,11 +13,7 @@ import java.util.List;
 @Transactional
 public class UserDaoImpl implements UserDao{
     @PersistenceContext
-    private final EntityManager entityManager;
-
-    public UserDaoImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+    private EntityManager entityManager;
 
 
     @Override
@@ -27,8 +24,11 @@ public class UserDaoImpl implements UserDao{
 
     @Override
     public void add(User user) {
-    entityManager.persist(user);
-
+        if (user.getId() == null) {
+            entityManager.persist(user);
+        } else {
+            entityManager.merge(user);
+        }
     }
 
     @Override
