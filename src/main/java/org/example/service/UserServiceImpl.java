@@ -1,24 +1,21 @@
 package org.example.service;
 
 import org.example.DAO.UserDao;
-import org.example.DAO.UserDaoImpl;
 import org.example.models.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
-    private  UserDao userDao;
+    private final UserDao userDao;
 
     public UserServiceImpl(UserDao userDao) {
         this.userDao = userDao;
     }
 
     @Override
-    @Transactional
     public List<User> getAll() {
         return userDao.getAll();
     }
@@ -26,24 +23,23 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void add(User user) {
-    userDao.add(user);
+        userDao.add(user);
     }
 
     @Override
     @Transactional
 
     public void delete(Long id) {
-    userDao.delete(id);
+        userDao.delete(id);
     }
 
     @Override
     @Transactional
-    public void update(Long id, User user) {
-    userDao.update(id, user);
+    public void update(User user) {userDao.update(user);
+
     }
 
     @Override
-    @Transactional
     public User findById(Long id) {
         return userDao.findById(id);
     }

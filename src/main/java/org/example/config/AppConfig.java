@@ -6,6 +6,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -21,10 +22,11 @@ import java.util.Properties;
 @ComponentScan("org.example")
 @PropertySource("classpath:db.properties")
 @EnableTransactionManagement
-public class appConfig {
+public class AppConfig {
     private Environment env;
+
     @Autowired
-    public appConfig(Environment env) {
+    public AppConfig(Environment env) {
         this.env = env;
     }
 
@@ -63,6 +65,10 @@ public class appConfig {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
         return transactionManager;
+    }
+    @Bean
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
+        return new PersistenceExceptionTranslationPostProcessor();
     }
 
 }
